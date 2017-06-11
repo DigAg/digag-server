@@ -11,3 +11,5 @@ To run it:
      docker-compose exec mysql bash
      mysql -uroot -proot
      create database db_digag;
+     
+ ### online http://139.224.135.86:8080/swagger-ui.html
