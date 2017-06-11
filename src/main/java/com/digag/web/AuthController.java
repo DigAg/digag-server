@@ -49,7 +49,8 @@ public class AuthController {
     }
 
     @ApiOperation(value = "刷新Token")
-    @ApiImplicitParam(name = "request", value = "请求信息（带有tokenHeader）", required = true, dataType = "HttpServletRequest")
+    @ApiImplicitParam(name = "request", value = "请求信息（带有tokenHeader）", required = true,
+            dataType = "HttpServletRequest")
     @RequestMapping(value = "/refresh", method = RequestMethod.GET)
     public ResponseEntity<?> refreshAndGetAuthenticationToken(
             HttpServletRequest request) throws AuthenticationException {
