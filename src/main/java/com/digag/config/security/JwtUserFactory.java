@@ -5,7 +5,6 @@ import com.digag.domain.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,7 +20,7 @@ final class JwtUserFactory {
     static JwtUser create(User user) {
         return new JwtUser(
                 user.getId(),
-                user.getUsername(),
+                user.getAccount(),
                 user.getPassword(),
                 mapToGrantedAuthorities(user.getRoles().stream().map(Role::getName).collect(Collectors.toList())),
                 user.getLastPasswordResetDate()
