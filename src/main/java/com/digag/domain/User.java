@@ -26,7 +26,7 @@ public class User {
     private String password;
 
     @Column(nullable = false, unique = true)
-    private String email;
+    private String account;
 
     private Date lastPasswordResetDate;
 
@@ -38,11 +38,11 @@ public class User {
     public User() {
     }
 
-    public User(String id, String username, String password, String email, Date lastPasswordResetDate, List<Role> roles) {
+    public User(String id, String username, String password, String account, Date lastPasswordResetDate, List<Role> roles) {
         this.id = id;
         this.username = username;
         this.password = password;
-        this.email = email;
+        this.account = account;
         this.lastPasswordResetDate = lastPasswordResetDate;
         this.roles = roles;
     }
@@ -71,12 +71,12 @@ public class User {
         this.password = password;
     }
 
-    public String getEmail() {
-        return email;
+    public String getAccount() {
+        return account;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setAccount(String account) {
+        this.account = account;
     }
 
     public Date getLastPasswordResetDate() {
