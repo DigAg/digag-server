@@ -6,8 +6,12 @@ import com.digag.domain.Role;
 import com.digag.domain.RoleRepository;
 import com.digag.domain.User;
 import com.digag.domain.UserRepository;
+import com.digag.util.JsonResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -26,6 +30,8 @@ import java.util.Date;
  */
 @Service
 public class AuthServiceImpl implements AuthService{
+
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Value("${jwt.tokenHead}")
     private String tokenHead;
@@ -51,11 +57,7 @@ public class AuthServiceImpl implements AuthService{
     }
 
     @Override
-    public User register(User userToAdd) {
-        final String username = userToAdd.getUsername();
-        if(userRepository.findByUsername(username) != null) {
-            return null;
-        }
+    public JsonResult register(User userToAdd) {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         final String rawPassword = userToAdd.getPassword();
         userToAdd.setPassword(encoder.encode(rawPassword));
@@ -65,7 +67,17 @@ public class AuthServiceImpl implements AuthService{
             userRole = roleRepository.save(new Role("ROLE_USER"));
         }
         userToAdd.setRoles(Collections.singletonList(userRole));
-        return userRepository.save(userToAdd);
+
+        JsonResult jsonResult;
+
+        try {
+            jsonResult = new JsonResult.JsonResultBuilder<User>(true).data(userRepository.save(userToAdd)).build();
+        } catch (DataIntegrityViolationException e) {
+            logger.debug(e.getMessage());
+            jsonResult = new JsonResult.JsonResultBuilder<User>(false).error(e.getRootCause().getMessage()).build();
+        }
+
+        return jsonResult;
     }
 
     @Override

@@ -4,6 +4,7 @@ import com.digag.config.security.JwtAuthenticationRequest;
 import com.digag.config.security.JwtAuthenticationResponse;
 import com.digag.domain.User;
 import com.digag.service.AuthService;
+import com.digag.util.JsonResult;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Optional;
 
 /**
  * Created by Yuicon on 2017/5/20.
@@ -38,10 +40,12 @@ public class AuthController {
     @RequestMapping(value = "login", method = RequestMethod.POST)
     public ResponseEntity<?> createAuthenticationToken(
             @RequestBody JwtAuthenticationRequest authenticationRequest) throws AuthenticationException {
+
         final String token = authService.login(authenticationRequest.getUsername(),
                 authenticationRequest.getPassword());
         // Return the token
         return ResponseEntity.ok(new JwtAuthenticationResponse(token));
+
     }
 
     @ApiOperation(value = "刷新Token")
@@ -62,7 +66,7 @@ public class AuthController {
     @ApiOperation(value = "注册")
     @ApiImplicitParam(name = "addedUser", value = "用户实体", required = true, dataType = "User")
     @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public User register(@RequestBody User addedUser) throws AuthenticationException {
+    public JsonResult register(@RequestBody User addedUser) throws AuthenticationException {
         return authService.register(addedUser);
     }
 
