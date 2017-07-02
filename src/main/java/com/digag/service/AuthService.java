@@ -11,7 +11,7 @@ public interface AuthService {
 
     JsonResult register(User userToAdd);
 
-    String login(String username, String password);
+    JsonResult login(String username, String password);
 
     String refresh(String oldToken);
 }

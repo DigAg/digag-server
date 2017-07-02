@@ -41,23 +41,25 @@ public class JsonResult<T> {
 
     public static class JsonResultBuilder<T> {
 
-        private final boolean success;
+        private boolean success;
 
         private T data;
 
         private String error;
 
-        public JsonResultBuilder(boolean success) {
-            this.success = success;
+        public JsonResultBuilder() {
+
         }
 
         public JsonResultBuilder error(String error) {
             this.error = error;
+            this.success = false;
             return this;
         }
 
         public JsonResultBuilder data(T data) {
             this.data = data;
+            this.success = true;
             return this;
         }
 

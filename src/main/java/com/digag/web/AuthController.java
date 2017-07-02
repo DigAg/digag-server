@@ -14,7 +14,6 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Optional;
 
 /**
  * Created by Yuicon on 2017/5/20.
@@ -38,14 +37,10 @@ public class AuthController {
     @ApiImplicitParam(name = "authenticationRequest", value = "JWT登录验证类", required = true,
             dataType = "JwtAuthenticationRequest")
     @RequestMapping(value = "login", method = RequestMethod.POST)
-    public ResponseEntity<?> createAuthenticationToken(
+    public JsonResult createAuthenticationToken(
             @RequestBody JwtAuthenticationRequest authenticationRequest) throws AuthenticationException {
 
-        final String token = authService.login(authenticationRequest.getUsername(),
-                authenticationRequest.getPassword());
-        // Return the token
-        return ResponseEntity.ok(new JwtAuthenticationResponse(token));
-
+        return authService.login(authenticationRequest.getUsername(), authenticationRequest.getPassword());
     }
 
     @ApiOperation(value = "刷新Token")

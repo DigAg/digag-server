@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -71,23 +72,31 @@ public class AuthServiceImpl implements AuthService{
         JsonResult jsonResult;
 
         try {
-            jsonResult = new JsonResult.JsonResultBuilder<User>(true).data(userRepository.save(userToAdd)).build();
+            jsonResult = new JsonResult.JsonResultBuilder<User>().data(userRepository.save(userToAdd)).build();
         } catch (DataIntegrityViolationException e) {
             logger.debug(e.getMessage());
-            jsonResult = new JsonResult.JsonResultBuilder<User>(false).error(e.getRootCause().getMessage()).build();
+            jsonResult = new JsonResult.JsonResultBuilder<User>().error(e.getRootCause().getMessage()).build();
         }
 
         return jsonResult;
     }
 
     @Override
-    public String login(String username, String password) {
-        UsernamePasswordAuthenticationToken upToken = new UsernamePasswordAuthenticationToken(username, password);
-        final Authentication authentication = authenticationManager.authenticate(upToken);
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+    public JsonResult login(String username, String password) {
 
-        final UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-        return jwtTokenUtil.generateToken(userDetails);
+        UsernamePasswordAuthenticationToken upToken = new UsernamePasswordAuthenticationToken(username, password);
+        JsonResult jsonResult;
+        try {
+            final Authentication authentication = authenticationManager.authenticate(upToken);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            final UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+            jsonResult = new JsonResult.JsonResultBuilder<String>().data(jwtTokenUtil.generateToken(userDetails)).build();
+        } catch (BadCredentialsException e) {
+            logger.debug(e.getMessage());
+            jsonResult = new JsonResult.JsonResultBuilder<String>().error("帐号或密码错误").build();
+        }
+
+        return jsonResult;
     }
 
     @Override
