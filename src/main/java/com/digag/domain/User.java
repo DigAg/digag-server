@@ -1,6 +1,7 @@
 package com.digag.domain;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -30,6 +31,7 @@ public class User {
 
     private Date lastPasswordResetDate;
 
+    @JsonIgnore
     @ManyToMany(targetEntity = Role.class, fetch = FetchType.EAGER)
     @JoinTable(joinColumns = @JoinColumn(name = "ROLE_ID"),
             inverseJoinColumns = @JoinColumn(name = "USER_ID"))

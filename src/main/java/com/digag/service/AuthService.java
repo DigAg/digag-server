@@ -1,6 +1,7 @@
 package com.digag.service;
 
 import com.digag.domain.User;
+import com.digag.util.JsonResult;
 
 /**
  * Created by Yuicon on 2017/5/20.
@@ -8,7 +9,7 @@ import com.digag.domain.User;
  */
 public interface AuthService {
 
-    User register(User userToAdd);
+    JsonResult register(User userToAdd);
 
     String login(String username, String password);
 
