@@ -1,5 +1,6 @@
-package com.digag.domain;
+package com.digag.domain.Repository;
 
+import com.digag.domain.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -1,5 +1,6 @@
-package com.digag.domain;
+package com.digag.domain.Repository;
 
+import com.digag.domain.Article;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
@@ -8,5 +9,5 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
  * https://github.com/Yuicon
  */
 @RepositoryRestResource
-public interface EntryRepository extends JpaRepository<Entry,String> {
+public interface ArticleRepository extends JpaRepository<Article,String> {
 }

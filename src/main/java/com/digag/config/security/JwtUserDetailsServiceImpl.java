@@ -1,7 +1,7 @@
 package com.digag.config.security;
 
 import com.digag.domain.User;
-import com.digag.domain.UserRepository;
+import com.digag.domain.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

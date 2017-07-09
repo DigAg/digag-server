@@ -12,7 +12,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 /**
  * Created by Yuicon on 2017/5/20.
- * https://segmentfault.com/u/yuicon
+ * https://github.com/Yuicon
  */
 @Configuration
 @EnableSwagger2
@@ -31,8 +31,8 @@ public class Swagger2 {
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
                 .title("DigAg")
-                .description("https://segmentfault.com/u/yuicon")
-                .termsOfServiceUrl("https://segmentfault.com/u/yuicon")
+                .description("https://github.com/Yuicon")
+                .termsOfServiceUrl("https://github.com/Yuicon")
                 // .contact("Yuicon")
                 .version("v1")
                 .build();

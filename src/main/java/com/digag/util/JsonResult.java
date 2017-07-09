@@ -1,5 +1,7 @@
 package com.digag.util;
 
+import java.util.ArrayList;
+
 /**
  * Created by Yuicon on 2017/7/2.
  * https://segmentfault.com/u/yuicon
@@ -39,7 +41,7 @@ public class JsonResult<T> {
                 '}';
     }
 
-    public static class JsonResultBuilder<T> {
+    public static final class JsonResultBuilder<T> {
 
         private boolean success;
 
@@ -66,6 +68,10 @@ public class JsonResult<T> {
         public JsonResult build() {
             return new JsonResult<>(this);
         }
+    }
+
+    public static void main(String[] args) {
+
     }
 
 }

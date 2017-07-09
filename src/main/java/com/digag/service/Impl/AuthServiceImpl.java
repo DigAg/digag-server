@@ -1,11 +1,12 @@
-package com.digag.service;
+package com.digag.service.Impl;
 
 import com.digag.config.security.JwtTokenUtil;
 import com.digag.config.security.JwtUser;
 import com.digag.domain.Role;
-import com.digag.domain.RoleRepository;
+import com.digag.domain.Repository.RoleRepository;
 import com.digag.domain.User;
-import com.digag.domain.UserRepository;
+import com.digag.domain.Repository.UserRepository;
+import com.digag.service.AuthService;
 import com.digag.util.JsonResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,7 +31,7 @@ import java.util.Date;
  * https://segmentfault.com/u/yuicon
  */
 @Service
-public class AuthServiceImpl implements AuthService{
+public class AuthServiceImpl implements AuthService {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
