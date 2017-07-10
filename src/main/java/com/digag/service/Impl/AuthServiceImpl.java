@@ -59,7 +59,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public JsonResult register(User userToAdd) {
+    public JsonResult<User> register(User userToAdd) {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         final String rawPassword = userToAdd.getPassword();
         userToAdd.setPassword(encoder.encode(rawPassword));
@@ -70,34 +70,27 @@ public class AuthServiceImpl implements AuthService {
         }
         userToAdd.setRoles(Collections.singletonList(userRole));
 
-        JsonResult jsonResult;
-
         try {
-            jsonResult = new JsonResult.JsonResultBuilder<User>().data(userRepository.save(userToAdd)).build();
+            return JsonResult.<User>builder().data(userRepository.save(userToAdd)).build();
         } catch (DataIntegrityViolationException e) {
             logger.debug(e.getMessage());
-            jsonResult = new JsonResult.JsonResultBuilder<User>().error(e.getRootCause().getMessage()).build();
+            return JsonResult.<User>builder().error(e.getRootCause().getMessage()).build();
         }
-
-        return jsonResult;
     }
 
     @Override
-    public JsonResult login(String username, String password) {
+    public JsonResult<String> login(String username, String password) {
 
         UsernamePasswordAuthenticationToken upToken = new UsernamePasswordAuthenticationToken(username, password);
-        JsonResult jsonResult;
         try {
             final Authentication authentication = authenticationManager.authenticate(upToken);
             SecurityContextHolder.getContext().setAuthentication(authentication);
             final UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-            jsonResult = new JsonResult.JsonResultBuilder<String>().data(jwtTokenUtil.generateToken(userDetails)).build();
+            return JsonResult.<String>builder().data(jwtTokenUtil.generateToken(userDetails)).build();
         } catch (BadCredentialsException e) {
             logger.debug(e.getMessage());
-            jsonResult = new JsonResult.JsonResultBuilder<String>().error("帐号或密码错误").build();
+            return JsonResult.<String>builder().error("帐号或密码错误").build();
         }
-
-        return jsonResult;
     }
 
     @Override

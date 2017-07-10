@@ -1,5 +1,6 @@
 package com.digag.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -45,6 +46,7 @@ public class Entry {
     @Column(nullable = false, unique = true)
     private String originalUrl;
 
+    @JsonIgnore
     @OneToOne
     @JoinColumn(name="article_id")
     private Article article;

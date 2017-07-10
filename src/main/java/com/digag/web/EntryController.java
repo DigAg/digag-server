@@ -3,14 +3,13 @@ package com.digag.web;
 import com.digag.domain.Entry;
 import com.digag.domain.Repository.EntryRepository;
 import com.digag.util.JsonResult;
+import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
-
 
 /**
  * Created by Yuicon on 2017/7/9.
@@ -26,38 +25,44 @@ public class EntryController {
     @ApiOperation(value="获取条目列表")
     @PreAuthorize("hasRole('USER')")
     @RequestMapping(method = RequestMethod.GET)
-    public JsonResult getEntries() {
-        return new JsonResult.JsonResultBuilder<List<Entry>>().data(entryRepository.findAll()).build();
+    public JsonResult<List<Entry>> getEntries() {
+        return JsonResult.<List<Entry>>builder().data(entryRepository.findAll()).build();
     }
 
     @ApiOperation(value="创建条目")
+    @ApiImplicitParam(name = "entry", value = "条目", required = true,
+            dataType = "Entry")
     @PreAuthorize("hasRole('USER')")
     @RequestMapping(method = RequestMethod.POST)
-    public JsonResult saveEntry(Entry entry) {
-        return new JsonResult.JsonResultBuilder<Entry>().data(entryRepository.save(entry)).build();
+    public JsonResult<Entry> saveEntry(Entry entry) {
+        return JsonResult.<Entry>builder().data(entryRepository.save(entry)).build();
     }
 
     @ApiOperation(value="获取单条条目")
+    @ApiImplicitParam(name = "id", value = "条目ID", required = true,
+            dataType = "String")
     @PreAuthorize("hasRole('USER')")
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public JsonResult getEntry(@PathVariable String id) {
-        return new JsonResult.JsonResultBuilder<Entry>().data(entryRepository.findOne(id)).build();
+    public JsonResult<Entry> getEntry(@PathVariable String id) {
+        return JsonResult.<Entry>builder().data(entryRepository.findOne(id)).build();
     }
 
     @ApiOperation(value="删除单条条目")
+    @ApiImplicitParam(name = "id", value = "条目ID", required = true,
+            dataType = "String")
     @PreAuthorize("hasRole('USER')")
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public JsonResult deleteEntry(@PathVariable String id) {
+    public JsonResult<String> deleteEntry(@PathVariable String id) {
         entryRepository.delete(id);
-        return new JsonResult.JsonResultBuilder<String>().data("删除成功").build();
+        return JsonResult.<String>builder().data("删除成功").build();
     }
 
     @ApiOperation(value="更新单条条目")
     @PreAuthorize("hasRole('USER')")
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-    public JsonResult updateEntry(@PathVariable String id, @RequestBody Entry entry) {
+    public JsonResult<Entry> updateEntry(@PathVariable String id, @RequestBody Entry entry) {
         entry.setId(id);
-        return new JsonResult.JsonResultBuilder<Entry>().data(entryRepository.save(entry)).build();
+        return JsonResult.<Entry>builder().data(entryRepository.save(entry)).build();
     }
 
 

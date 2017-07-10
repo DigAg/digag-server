@@ -37,7 +37,7 @@ public class AuthController {
     @ApiImplicitParam(name = "authenticationRequest", value = "JWT登录验证类", required = true,
             dataType = "JwtAuthenticationRequest")
     @RequestMapping(value = "login", method = RequestMethod.POST)
-    public JsonResult createAuthenticationToken(
+    public JsonResult<String> createAuthenticationToken(
             @RequestBody JwtAuthenticationRequest authenticationRequest) throws AuthenticationException {
 
         return authService.login(authenticationRequest.getUsername(), authenticationRequest.getPassword());
@@ -61,7 +61,7 @@ public class AuthController {
     @ApiOperation(value = "注册")
     @ApiImplicitParam(name = "addedUser", value = "用户实体", required = true, dataType = "User")
     @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public JsonResult register(@RequestBody User addedUser) throws AuthenticationException {
+    public JsonResult<User> register(@RequestBody User addedUser) throws AuthenticationException {
         return authService.register(addedUser);
     }
 

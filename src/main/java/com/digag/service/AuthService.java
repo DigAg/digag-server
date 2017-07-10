@@ -9,9 +9,9 @@ import com.digag.util.JsonResult;
  */
 public interface AuthService {
 
-    JsonResult register(User userToAdd);
+    JsonResult<User> register(User userToAdd);
 
-    JsonResult login(String username, String password);
+    JsonResult<String> login(String username, String password);
 
     String refresh(String oldToken);
 }

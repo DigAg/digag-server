@@ -20,6 +20,10 @@ public class JsonResult<T> {
         this.error = builder.error;
     }
 
+    public static <T>JsonResult.JsonResultBuilder<T> builder(){
+        return new JsonResultBuilder<>();
+    }
+
     public boolean isSuccess() {
         return success;
     }
@@ -49,7 +53,7 @@ public class JsonResult<T> {
 
         private String error;
 
-        public JsonResultBuilder() {
+        private JsonResultBuilder() {
 
         }
 
@@ -71,7 +75,7 @@ public class JsonResult<T> {
     }
 
     public static void main(String[] args) {
-
+        System.out.print(JsonResult.<String>builder().data("asd").build().toString());
     }
 
 }
