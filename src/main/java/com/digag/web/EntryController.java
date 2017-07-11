@@ -23,7 +23,6 @@ public class EntryController {
     private EntryRepository entryRepository;
 
     @ApiOperation(value="获取条目列表")
-    @PreAuthorize("hasRole('USER')")
     @RequestMapping(method = RequestMethod.GET)
     public JsonResult<List<Entry>> getEntries() {
         return JsonResult.<List<Entry>>builder().data(entryRepository.findAll()).build();
@@ -41,7 +40,6 @@ public class EntryController {
     @ApiOperation(value="获取单条条目")
     @ApiImplicitParam(name = "id", value = "条目ID", required = true,
             dataType = "String")
-    @PreAuthorize("hasRole('USER')")
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public JsonResult<Entry> getEntry(@PathVariable String id) {
         return JsonResult.<Entry>builder().data(entryRepository.findOne(id)).build();
@@ -64,8 +62,5 @@ public class EntryController {
         entry.setId(id);
         return JsonResult.<Entry>builder().data(entryRepository.save(entry)).build();
     }
-
-
-
 
 }
