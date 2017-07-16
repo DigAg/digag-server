@@ -2,6 +2,7 @@ package com.digag.web;
 
 import com.digag.domain.Entry;
 import com.digag.domain.Repository.EntryRepository;
+import com.digag.service.EntryService;
 import com.digag.util.JsonResult;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -22,6 +24,9 @@ public class EntryController {
     @Autowired
     private EntryRepository entryRepository;
 
+    @Autowired
+    private EntryService entryService;
+
     @ApiOperation(value="获取条目列表")
     @RequestMapping(method = RequestMethod.GET)
     public JsonResult<List<Entry>> getEntries() {
@@ -33,8 +38,8 @@ public class EntryController {
             dataType = "Entry")
     @PreAuthorize("hasRole('USER')")
     @RequestMapping(method = RequestMethod.POST)
-    public JsonResult<Entry> saveEntry(Entry entry) {
-        return JsonResult.<Entry>builder().data(entryRepository.save(entry)).build();
+    public JsonResult<Entry> saveEntry(@RequestBody Entry entry, HttpServletRequest request) {
+        return entryService.create(entry, request);
     }
 
     @ApiOperation(value="获取单条条目")

@@ -27,10 +27,13 @@ public class Entry {
 
     private Date createdAt;
 
+    @Column(nullable=false, columnDefinition="INT default 0")
     private int viewsCount;
 
+    @Column(nullable=false, columnDefinition="INT default 0")
     private int collectionCount;
 
+    @Column(nullable=false, columnDefinition="INT default 0")
     private int commentsCount;
 
     // 简介
