@@ -1,7 +1,5 @@
 package com.digag.util;
 
-import java.util.ArrayList;
-
 /**
  * Created by Yuicon on 2017/7/2.
  * https://segmentfault.com/u/yuicon

@@ -7,11 +7,14 @@ import com.digag.util.JsonResult;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 
 /**
  * Created by Yuicon on 2017/7/9.
@@ -19,6 +22,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/entries")
+@SuppressWarnings("all")
 public class EntryController {
 
     @Autowired
@@ -29,8 +33,11 @@ public class EntryController {
 
     @ApiOperation(value="获取条目列表")
     @RequestMapping(method = RequestMethod.GET)
-    public JsonResult<List<Entry>> getEntries() {
-        return JsonResult.<List<Entry>>builder().data(entryRepository.findAll()).build();
+    public JsonResult<Page<Entry>> getEntries(@RequestParam(value = "page", defaultValue = "0") Integer page,
+                                              @RequestParam(value = "size", defaultValue = "15") Integer size) {
+        Sort sort = new Sort(Sort.Direction.DESC, "id");
+        Pageable pageable = new PageRequest(page, size, sort);
+        return JsonResult.<Page<Entry>>builder().data(entryRepository.findAll(pageable)).build();
     }
 
     @ApiOperation(value="创建条目")
