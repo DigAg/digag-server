@@ -54,7 +54,7 @@ public class EntryController {
             dataType = "String")
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public JsonResult<Entry> getEntry(@PathVariable String id) {
-        return JsonResult.<Entry>builder().data(entryRepository.findOne(id)).build();
+        return entryService.findOne(id);
     }
 
     @ApiOperation(value="删除单条条目")
@@ -72,7 +72,7 @@ public class EntryController {
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     public JsonResult<Entry> updateEntry(@PathVariable String id, @RequestBody Entry entry) {
         entry.setId(id);
-        return JsonResult.<Entry>builder().data(entryRepository.save(entry)).build();
+        return entryService.save(entry);
     }
 
 }

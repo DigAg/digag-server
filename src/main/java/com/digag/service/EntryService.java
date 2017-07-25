@@ -12,4 +12,8 @@ import javax.servlet.http.HttpServletRequest;
 public interface EntryService {
 
     JsonResult<Entry> create (Entry entry, HttpServletRequest request);
+
+    JsonResult<Entry> save (Entry entry);
+
+    JsonResult<Entry> findOne (String id);
 }
