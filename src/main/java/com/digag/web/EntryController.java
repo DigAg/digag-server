@@ -35,9 +35,7 @@ public class EntryController {
     @RequestMapping(method = RequestMethod.GET)
     public JsonResult<Page<Entry>> getEntries(@RequestParam(value = "page", defaultValue = "0") Integer page,
                                               @RequestParam(value = "size", defaultValue = "15") Integer size) {
-        Sort sort = new Sort(Sort.Direction.DESC, "id");
-        Pageable pageable = new PageRequest(page, size, sort);
-        return JsonResult.<Page<Entry>>builder().data(entryRepository.findAll(pageable)).build();
+        return entryService.findAll(page, size);
     }
 
     @ApiOperation(value="创建条目")
