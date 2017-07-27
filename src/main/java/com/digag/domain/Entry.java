@@ -53,7 +53,7 @@ public class Entry implements Serializable{
     private String originalUrl;
 
     @JsonIgnore
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name="article_id")
     private Article article;
 

@@ -27,7 +27,7 @@ public class Article implements Serializable {
 
     private Date createdAt;
 
-    @OneToOne(mappedBy="article")
+    @OneToOne(mappedBy="article", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Entry entry;
 
     public Article() {
