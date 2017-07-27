@@ -6,11 +6,17 @@ services:
      - "8080:8080"
     depends_on:
       - mysql
+      - redis
   mysql:
     image: mysql:5.7
     environment:
       - MYSQL_ROOT_PASSWORD=root
     volumes:
       - "mysql_data:/var/lib/mysql"
+  redis:
+      image: redis:latest
+      volumes:
+        - "redis-data:/data"
 volumes:
   mysql_data:
+  redis-data:

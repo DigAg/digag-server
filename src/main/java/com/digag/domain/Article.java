@@ -3,6 +3,7 @@ package com.digag.domain;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -10,7 +11,9 @@ import java.util.Date;
  * https://github.com/Yuicon
  */
 @Entity
-public class Article {
+public class Article implements Serializable {
+
+    private static final long serialVersionUID = 2L;
 
     @Id
     @GeneratedValue(generator = "paymentableGenerator")

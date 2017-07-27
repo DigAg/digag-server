@@ -7,22 +7,18 @@ import com.digag.domain.Repository.UserRepository;
 import com.digag.domain.User;
 import com.digag.service.EntryService;
 import com.digag.util.JsonResult;
-import io.protostuff.LinkedBuffer;
-import io.protostuff.ProtostuffIOUtil;
-import io.protostuff.runtime.RuntimeSchema;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.*;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by Yuicon on 2017/7/16.
@@ -36,12 +32,15 @@ public class EntryServiceImpl implements EntryService {
 
     @Autowired
     public EntryServiceImpl(EntryRepository entryRepository, UserRepository userRepositor, JwtTokenUtil jwtTokenUtil,
-                            JedisPool jedisPool) {
+                            RedisTemplate redisTemplate) {
         this.entryRepository = entryRepository;
         this.userRepository = userRepositor;
         this.jwtTokenUtil = jwtTokenUtil;
-        this.jedisPool = jedisPool;
+        this.redisTemplate = redisTemplate;
     }
+
+    @Resource(name = "redisTemplate")
+    private ValueOperations<String, Entry> valueOperations;
 
     private final EntryRepository entryRepository;
 
@@ -49,9 +48,7 @@ public class EntryServiceImpl implements EntryService {
 
     private final JwtTokenUtil jwtTokenUtil;
 
-    private final JedisPool jedisPool;
-
-    private final RuntimeSchema<Entry> schema = RuntimeSchema.createFrom(Entry.class);
+    private final RedisTemplate<String, Entry> redisTemplate;
 
     @Value("${jwt.header}")
     private String tokenHeader;
@@ -94,80 +91,26 @@ public class EntryServiceImpl implements EntryService {
     }
 
     private Page<Entry> getRecommendEntries(Pageable pageable) {
-        PageImpl<Entry> entryPage = null;
-
-        try {
-            Jedis jedis = jedisPool.getResource();
-            try {
-                String key = "RecommendEntries";
-                List<byte[]> bytes = jedis.lrange(key.getBytes(), 0, 15);
-                if (!bytes.isEmpty()) {
-                    List list = new ArrayList<>();
-                    bytes.stream().forEach(entry -> {
-                        Entry message = schema.newMessage();
-                        ProtostuffIOUtil.mergeFrom(entry, message, schema);
-                        list.add(message);
-                    });
-                    entryPage = new PageImpl<Entry>(list);
-                } else {
-                    entryPage = (PageImpl<Entry>) entryRepository.findAll(pageable);
-                    int timeout = 60 * 60;
-                    entryPage.forEach(entry -> {
-                        byte[] newBytes = ProtostuffIOUtil.toByteArray(entry, schema,
-                                LinkedBuffer.allocate(LinkedBuffer.DEFAULT_BUFFER_SIZE));
-                        jedis.rpush(key.getBytes(), newBytes);
-                    });
-                }
-            } finally {
-                jedis.close();
-            }
-        } catch (Exception e) {
-            logger.error(e.getMessage(), e);
-        }
-        return entryPage;
+        return null;
     }
 
-    private Entry getEntry2Redis(String id) {
-        Entry entry = schema.newMessage();
-        try {
-            Jedis jedis = jedisPool.getResource();
-            try {
-                String key = "Entry:" + id;
-                byte[] bytes = jedis.get(key.getBytes());
-                if (bytes != null) {
-                    ProtostuffIOUtil.mergeFrom(bytes, entry, schema);
-                    return entry;
-                }
-            } finally {
-                jedis.close();
-            }
-        } catch (Exception e) {
-            logger.error(e.getMessage(), e);
+    private Entry getEntry2Redis(String id){
+
+        Optional<Entry> entry = Optional.ofNullable(valueOperations.get(id));
+
+        if (entry.isPresent()) {
+            return entry.get();
         }
 
-        entry = entryRepository.findOne(id);
-        if (entry != null) {
-            String key = "Entry:" + entry.getId();
-            putEntry2Redis(key, entry);
+        entry = Optional.ofNullable(entryRepository.findOne(id));
+        if (entry.isPresent()) {
+            putEntry2Redis(entry.get());
         }
-        return entry;
+        return entry.orElseGet(Entry::new);
     }
 
-    private String putEntry2Redis(String key, Entry entry) {
-        try {
-            Jedis jedis = jedisPool.getResource();
-            try {
-                byte[] bytes = ProtostuffIOUtil.toByteArray(entry, schema,
-                        LinkedBuffer.allocate(LinkedBuffer.DEFAULT_BUFFER_SIZE));
-                int timeout = 60 * 60;
-                return jedis.setex(key.getBytes(), timeout, bytes);
-            } finally {
-                jedis.close();
-            }
-        } catch (Exception e) {
-            logger.error(e.getMessage(), e);
-        }
-        return "error";
+    private void putEntry2Redis(Entry entry) {
+        valueOperations.set(entry.getId(), entry);
     }
 
 }
