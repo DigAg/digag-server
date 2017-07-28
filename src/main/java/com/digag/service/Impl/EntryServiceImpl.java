@@ -32,24 +32,17 @@ public class EntryServiceImpl implements EntryService {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
-    public EntryServiceImpl(EntryRepository entryRepository, UserRepository userRepositor, JwtTokenUtil jwtTokenUtil,
-                            RedisTemplate redisTemplate) {
+    public EntryServiceImpl(EntryRepository entryRepository, UserRepository userRepositor, JwtTokenUtil jwtTokenUtil) {
         this.entryRepository = entryRepository;
         this.userRepository = userRepositor;
         this.jwtTokenUtil = jwtTokenUtil;
-        this.redisTemplate = redisTemplate;
     }
-
-    @Resource(name = "redisTemplate")
-    private ValueOperations<String, Entry> valueOperations;
 
     private final EntryRepository entryRepository;
 
     private final UserRepository userRepository;
 
     private final JwtTokenUtil jwtTokenUtil;
-
-    private final RedisTemplate<String, Entry> redisTemplate;
 
     @Value("${jwt.header}")
     private String tokenHeader;
@@ -76,6 +69,16 @@ public class EntryServiceImpl implements EntryService {
     }
 
     @Override
+    public JsonResult<Integer> updateCollectionCount(String id, int collectionCount, HttpServletRequest request) {
+        String authHeader = request.getHeader(this.tokenHeader);
+        if (authHeader != null && authHeader.startsWith(tokenHead)) {
+            final String authToken = authHeader.substring(tokenHead.length()); // The part after "Bearer "
+            User user = userRepository.findByAccount(jwtTokenUtil.getUsernameFromToken(authToken));
+        }
+        return JsonResult.<Integer>builder().data(entryRepository.updateCollectionCount(id, collectionCount)).build();
+    }
+
+    @Override
     public JsonResult<Entry> findOne(String id) {
         return JsonResult.<Entry>builder().data(entryRepository.findOne(id)).build();
     }
@@ -86,4 +89,6 @@ public class EntryServiceImpl implements EntryService {
         Pageable pageable = new PageRequest(page, size, sort);
         return JsonResult.<Page<Entry>>builder().data(entryRepository.findAll(pageable)).build();
     }
+
+
 }

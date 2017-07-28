@@ -5,15 +5,20 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by Yuicon on 2017/5/14.
  * https://segmentfault.com/u/yuicon
  */
 @Entity
-public class User {
+public class User implements Serializable {
+
+    private static final long serialVersionUID = 3L;
 
     @Id
     @GeneratedValue(generator = "paymentableGenerator")
@@ -32,7 +37,7 @@ public class User {
     private Date lastPasswordResetDate;
 
     @JsonIgnore
-    @ManyToMany(targetEntity = Role.class, fetch = FetchType.EAGER)
+    @ManyToMany(targetEntity = Role.class, fetch = FetchType.LAZY)
     @JoinTable(joinColumns = @JoinColumn(name = "ROLE_ID"),
             inverseJoinColumns = @JoinColumn(name = "USER_ID"))
     private List<Role> roles;
@@ -95,17 +100,5 @@ public class User {
 
     public void setRoles(List<Role> roles) {
         this.roles = roles;
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "id='" + id + '\'' +
-                ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", account='" + account + '\'' +
-                ", lastPasswordResetDate=" + lastPasswordResetDate +
-                ", roles=" + roles +
-                '}';
     }
 }

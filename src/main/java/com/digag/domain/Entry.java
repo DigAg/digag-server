@@ -6,13 +6,16 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Created by Yuicon on 2017/7/8.
  * https://github.com/Yuicon
  */
 @Entity
-public class Entry implements Serializable{
+public class Entry implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -30,13 +33,13 @@ public class Entry implements Serializable{
 
     private Date createdAt;
 
-    @Column(nullable=false, columnDefinition="INT default 0")
+    @Column(nullable = false, columnDefinition = "INT default 0")
     private int viewsCount;
 
-    @Column(nullable=false, columnDefinition="INT default 0")
+    @Column(nullable = false, columnDefinition = "INT default 0")
     private int collectionCount;
 
-    @Column(nullable=false, columnDefinition="INT default 0")
+    @Column(nullable = false, columnDefinition = "INT default 0")
     private int commentsCount;
 
     // 简介
@@ -54,7 +57,7 @@ public class Entry implements Serializable{
 
     @JsonIgnore
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name="article_id")
+    @JoinColumn(name = "article_id")
     private Article article;
 
     public Entry() {

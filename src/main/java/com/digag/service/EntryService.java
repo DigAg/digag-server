@@ -16,7 +16,11 @@ public interface EntryService {
 
     JsonResult<Entry> save (Entry entry);
 
+    JsonResult<Integer> updateCollectionCount (String id, int collectionCount, HttpServletRequest request);
+
     JsonResult<Entry> findOne (String id);
 
     JsonResult<Page<Entry>> findAll (Integer page, Integer size);
+
+
 }
