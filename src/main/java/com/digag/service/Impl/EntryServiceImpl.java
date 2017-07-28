@@ -77,41 +77,13 @@ public class EntryServiceImpl implements EntryService {
 
     @Override
     public JsonResult<Entry> findOne(String id) {
-        return JsonResult.<Entry>builder().data(getEntry2Redis(id)).build();
+        return JsonResult.<Entry>builder().data(entryRepository.findOne(id)).build();
     }
 
     @Override
     public JsonResult<Page<Entry>> findAll(Integer page, Integer size) {
-
         Sort sort = new Sort(Sort.Direction.DESC, "createdAt");
         Pageable pageable = new PageRequest(page, size, sort);
-//        if (page == 0 && size == 15) {
-//            return JsonResult.<Page<Entry>>builder().data(getRecommendEntries(pageable)).build();
-//        }
         return JsonResult.<Page<Entry>>builder().data(entryRepository.findAll(pageable)).build();
     }
-
-    private Page<Entry> getRecommendEntries(Pageable pageable) {
-        return null;
-    }
-
-    private Entry getEntry2Redis(String id){
-
-        Optional<Entry> entry = Optional.ofNullable(valueOperations.get(id));
-
-        if (entry.isPresent()) {
-            return entry.get();
-        }
-
-        entry = Optional.ofNullable(entryRepository.findOne(id));
-        if (entry.isPresent()) {
-            putEntry2Redis(entry.get());
-        }
-        return entry.orElseGet(Entry::new);
-    }
-
-    private void putEntry2Redis(Entry entry) {
-        valueOperations.set(entry.getId(), entry);
-    }
-
 }
