@@ -37,7 +37,7 @@ public class User implements Serializable {
     private Date lastPasswordResetDate;
 
     @JsonIgnore
-    @ManyToMany(targetEntity = Role.class, fetch = FetchType.LAZY)
+    @ManyToMany(targetEntity = Role.class, fetch = FetchType.EAGER)
     @JoinTable(joinColumns = @JoinColumn(name = "ROLE_ID"),
             inverseJoinColumns = @JoinColumn(name = "USER_ID"))
     private List<Role> roles;

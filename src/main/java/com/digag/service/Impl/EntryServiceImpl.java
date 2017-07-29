@@ -1,23 +1,20 @@
 package com.digag.service.Impl;
 
 import com.digag.config.security.JwtTokenUtil;
-import com.digag.domain.Entry;
+import com.digag.domain.*;
+import com.digag.domain.Collection;
+import com.digag.domain.Repository.CollectionRepository;
 import com.digag.domain.Repository.EntryRepository;
 import com.digag.domain.Repository.UserRepository;
-import com.digag.domain.User;
 import com.digag.service.EntryService;
 import com.digag.util.JsonResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.*;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
@@ -32,13 +29,17 @@ public class EntryServiceImpl implements EntryService {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
-    public EntryServiceImpl(EntryRepository entryRepository, UserRepository userRepositor, JwtTokenUtil jwtTokenUtil) {
+    public EntryServiceImpl(EntryRepository entryRepository, UserRepository userRepositor, JwtTokenUtil jwtTokenUtil,
+                            CollectionRepository collectionRepository) {
         this.entryRepository = entryRepository;
         this.userRepository = userRepositor;
         this.jwtTokenUtil = jwtTokenUtil;
+        this.collectionRepository = collectionRepository;
     }
 
     private final EntryRepository entryRepository;
+
+    private final CollectionRepository collectionRepository;
 
     private final UserRepository userRepository;
 
@@ -69,13 +70,32 @@ public class EntryServiceImpl implements EntryService {
     }
 
     @Override
-    public JsonResult<Integer> updateCollectionCount(String id, int collectionCount, HttpServletRequest request) {
+    public JsonResult<Integer> updateCollectionCount(String id, HttpServletRequest request) {
         String authHeader = request.getHeader(this.tokenHeader);
+        Integer integer = 0;
         if (authHeader != null && authHeader.startsWith(tokenHead)) {
             final String authToken = authHeader.substring(tokenHead.length()); // The part after "Bearer "
             User user = userRepository.findByAccount(jwtTokenUtil.getUsernameFromToken(authToken));
+            Optional<Entry> entry = Optional.
+                    ofNullable(entryRepository.findOne(id));
+            if (entry.isPresent()) {
+                Optional<Collection> collection = Optional.
+                        ofNullable(collectionRepository.findByUidAndEid(user.getId(), id));
+                if (collection.isPresent()) {
+                    collectionRepository.delete(collection.get().getId());
+                    Entry entry1 = entry.get();
+                    entry1.setCollectionCount(entry.get().getCollectionCount() - 1);
+                    entryRepository.save(entry1);
+                } else {
+                    collectionRepository.save(new Collection(user.getId(), id));
+                    Entry entry1 = entry.get();
+                    entry1.setCollectionCount(entry.get().getCollectionCount() + 1);
+                    entryRepository.save(entry1);
+                    integer++;
+                }
+            }
         }
-        return JsonResult.<Integer>builder().data(entryRepository.updateCollectionCount(id, collectionCount)).build();
+        return JsonResult.<Integer>builder().data(integer).build();
     }
 
     @Override

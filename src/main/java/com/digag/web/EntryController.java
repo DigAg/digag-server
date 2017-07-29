@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
+import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
+
 /**
  * Created by Yuicon on 2017/7/9.
  * https://github.com/Yuicon
@@ -71,6 +73,15 @@ public class EntryController {
     public JsonResult<Entry> updateEntry(@PathVariable String id, @RequestBody Entry entry) {
         entry.setId(id);
         return entryService.save(entry);
+    }
+
+    @ApiOperation(value="更新条目喜欢数量")
+    @ApiImplicitParam(name = "id", value = "条目ID", required = true,
+            dataType = "String")
+    @PreAuthorize("hasRole('USER')")
+    @RequestMapping(value = "/like/{id}", method = RequestMethod.PUT)
+    public JsonResult<Integer> updateCollectionCount(HttpServletRequest request, @PathVariable String id) {
+        return entryService.updateCollectionCount(id, request);
     }
 
 }
