@@ -7,6 +7,14 @@ services:
     depends_on:
       - mysql
       - redis
+  nginx:
+    image: nginx:latest
+    ports:
+     - "80:80"
+    volumes:
+     - ./nginx.conf:/etc/nginx/conf.d/default.conf
+     - ./build:/usr/share/nginx/html
+    command: /bin/bash -c "nginx -g 'daemon off;'"
   mysql:
     image: mysql:5.7
     environment:
@@ -16,7 +24,7 @@ services:
   redis:
       image: redis:latest
       volumes:
-        - "redis-data:/data"
+        - "redis_data:/data"
 volumes:
   mysql_data:
-  redis-data:
+  redis_data:
