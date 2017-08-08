@@ -39,7 +39,7 @@ public class ArticleController {
 
     @ApiOperation(value="获取单条文章")
     @ApiImplicitParam(name = "id", value = "文章ID", required = true,
-            dataType = "String")
+            dataType = "String", paramType = "path")
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public JsonResult<Article> getArticle(@PathVariable String id) {
         return JsonResult.<Article>builder().data(articleRepository.findOne(id)).build();
@@ -47,7 +47,7 @@ public class ArticleController {
 
     @ApiOperation(value="删除单条文章")
     @ApiImplicitParam(name = "id", value = "文章ID", required = true,
-            dataType = "String")
+            dataType = "String", paramType = "path")
     @PreAuthorize("hasRole('USER')")
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     public JsonResult<String> deleteArticle(@PathVariable String id) {

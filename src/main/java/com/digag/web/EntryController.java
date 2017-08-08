@@ -51,7 +51,7 @@ public class EntryController {
 
     @ApiOperation(value="获取单条条目")
     @ApiImplicitParam(name = "id", value = "条目ID", required = true,
-            dataType = "String")
+            dataType = "String", paramType = "path")
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public JsonResult<Entry> getEntry(@PathVariable String id) {
         return entryService.findOne(id);
@@ -59,7 +59,7 @@ public class EntryController {
 
     @ApiOperation(value="删除单条条目")
     @ApiImplicitParam(name = "id", value = "条目ID", required = true,
-            dataType = "String")
+            dataType = "String", paramType = "path")
     @PreAuthorize("hasRole('USER')")
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     public JsonResult<String> deleteEntry(@PathVariable String id) {
@@ -77,7 +77,7 @@ public class EntryController {
 
     @ApiOperation(value="更新条目喜欢数量")
     @ApiImplicitParam(name = "id", value = "条目ID", required = true,
-            dataType = "String")
+            dataType = "String", paramType = "path")
     @PreAuthorize("hasRole('USER')")
     @RequestMapping(value = "/like/{id}", method = RequestMethod.PUT)
     public JsonResult<Integer> updateCollectionCount(HttpServletRequest request, @PathVariable String id) {

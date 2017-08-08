@@ -40,7 +40,7 @@ public class UserController {
     }
 
     @ApiOperation(value="获取用户", notes="根据url的id来获取用户详细信息")
-    @ApiImplicitParam(name = "id", value = "用户ID", required = true, dataType = "String")
+    @ApiImplicitParam(name = "id", value = "用户ID", required = true, dataType = "String", paramType = "path")
     @PostAuthorize("returnObject.username == principal.username or hasRole('ROLE_ADMIN')")
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public User getUser(@PathVariable String id) {
