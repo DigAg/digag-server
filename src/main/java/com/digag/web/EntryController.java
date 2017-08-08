@@ -6,6 +6,7 @@ import com.digag.service.EntryService;
 import com.digag.util.JsonResult;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -70,7 +71,8 @@ public class EntryController {
     @ApiOperation(value="更新单条条目")
     @PreAuthorize("hasRole('USER')")
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-    public JsonResult<Entry> updateEntry(@PathVariable String id, @RequestBody Entry entry) {
+    public JsonResult<Entry> updateEntry(@PathVariable  @ApiParam(value = "条目id", required = true)  String id,
+                                         @ApiParam(value = "条目对象", required = true)  @RequestBody Entry entry) {
         entry.setId(id);
         return entryService.save(entry);
     }

@@ -8,6 +8,7 @@ import com.digag.domain.User;
 import com.digag.domain.Repository.UserRepository;
 import com.digag.service.AuthService;
 import com.digag.util.JsonResult;
+import com.digag.util.Util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,7 @@ import java.util.Date;
  * https://segmentfault.com/u/yuicon
  */
 @Service
+@SuppressWarnings("all")
 public class AuthServiceImpl implements AuthService {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -60,6 +62,11 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public JsonResult<User> register(User userToAdd) {
+
+        if (userToAdd.getAccount() == null || Util.checkEmail(userToAdd.getAccount())) {
+            return JsonResult.<User>builder().error("注册帐号错误!").build();
+        }
+
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         final String rawPassword = userToAdd.getPassword();
         userToAdd.setPassword(encoder.encode(rawPassword));
@@ -69,7 +76,6 @@ public class AuthServiceImpl implements AuthService {
             userRole = roleRepository.save(new Role("ROLE_USER"));
         }
         userToAdd.setRoles(Collections.singletonList(userRole));
-
         try {
             return JsonResult.<User>builder().data(userRepository.save(userToAdd)).build();
         } catch (DataIntegrityViolationException e) {
