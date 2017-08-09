@@ -3,6 +3,7 @@ package com.digag.service.Impl;
 import com.digag.config.security.JwtTokenUtil;
 import com.digag.domain.*;
 import com.digag.domain.Collection;
+import com.digag.domain.Repository.BrowseLogRepository;
 import com.digag.domain.Repository.CollectionRepository;
 import com.digag.domain.Repository.EntryRepository;
 import com.digag.domain.Repository.UserRepository;
@@ -30,14 +31,17 @@ public class EntryServiceImpl implements EntryService {
 
     @Autowired
     public EntryServiceImpl(EntryRepository entryRepository, UserRepository userRepositor, JwtTokenUtil jwtTokenUtil,
-                            CollectionRepository collectionRepository) {
+                            CollectionRepository collectionRepository, BrowseLogRepository browseLogRepository) {
         this.entryRepository = entryRepository;
         this.userRepository = userRepositor;
         this.jwtTokenUtil = jwtTokenUtil;
         this.collectionRepository = collectionRepository;
+        this.browseLogRepository = browseLogRepository;
     }
 
     private final EntryRepository entryRepository;
+
+    private final BrowseLogRepository browseLogRepository;
 
     private final CollectionRepository collectionRepository;
 
@@ -104,7 +108,34 @@ public class EntryServiceImpl implements EntryService {
     }
 
     @Override
-    public JsonResult<Page<Entry>> findAll(Integer page, Integer size) {
+    public JsonResult<Page<Entry>> findAll(Integer page, Integer size, HttpServletRequest request) {
+
+        String authHeader = request.getHeader(this.tokenHeader);
+        Optional<BrowseLog> browseLog;
+        if (authHeader != null && authHeader.startsWith(tokenHead)) {
+            final String authToken = authHeader.substring(tokenHead.length()); // The part after "Bearer "
+            User user = userRepository.findByAccount(jwtTokenUtil.getUsernameFromToken(authToken));
+            browseLog = Optional.
+                    ofNullable(browseLogRepository.findByUid(user.getId()));
+            if (browseLog.isPresent()) {
+                BrowseLog browseLog1 = browseLog.get();
+                browseLog1.setCount(browseLog1.getCount() + 1);
+                browseLogRepository.save(browseLog1);
+            } else {
+                browseLogRepository.save(new BrowseLog(request.getRemoteAddr(), user.getId(), 1));
+            }
+        } else {
+            browseLog = Optional.
+                    ofNullable(browseLogRepository.findByIp(request.getRemoteAddr()));
+            if (browseLog.isPresent()) {
+                BrowseLog browseLog1 = browseLog.get();
+                browseLog1.setCount(browseLog1.getCount() + 1);
+                browseLogRepository.save(browseLog1);
+            } else {
+                browseLogRepository.save(new BrowseLog(request.getRemoteAddr(), 1));
+            }
+        }
+
         Sort sort = new Sort(Sort.Direction.DESC, "createdAt");
         Pageable pageable = new PageRequest(page, size, sort);
         return JsonResult.<Page<Entry>>builder().data(entryRepository.findAll(pageable)).build();

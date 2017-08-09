@@ -34,14 +34,15 @@ public class EntryController {
     @Autowired
     private EntryService entryService;
 
-    @ApiOperation(value="获取条目列表")
+    @ApiOperation(value = "获取条目列表")
     @RequestMapping(method = RequestMethod.GET)
     public JsonResult<Page<Entry>> getEntries(@RequestParam(value = "page", defaultValue = "0") Integer page,
-                                              @RequestParam(value = "size", defaultValue = "15") Integer size) {
-        return entryService.findAll(page, size);
+                                              @RequestParam(value = "size", defaultValue = "15") Integer size,
+                                              HttpServletRequest request) {
+        return entryService.findAll(page, size, request);
     }
 
-    @ApiOperation(value="创建条目")
+    @ApiOperation(value = "创建条目")
     @ApiImplicitParam(name = "entry", value = "条目", required = true,
             dataType = "Entry")
     @PreAuthorize("hasRole('USER')")
@@ -50,7 +51,7 @@ public class EntryController {
         return entryService.create(entry, request);
     }
 
-    @ApiOperation(value="获取单条条目")
+    @ApiOperation(value = "获取单条条目")
     @ApiImplicitParam(name = "id", value = "条目ID", required = true,
             dataType = "String", paramType = "path")
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
@@ -58,7 +59,7 @@ public class EntryController {
         return entryService.findOne(id);
     }
 
-    @ApiOperation(value="删除单条条目")
+    @ApiOperation(value = "删除单条条目")
     @ApiImplicitParam(name = "id", value = "条目ID", required = true,
             dataType = "String", paramType = "path")
     @PreAuthorize("hasRole('USER')")
@@ -68,16 +69,16 @@ public class EntryController {
         return JsonResult.<String>builder().data("删除成功").build();
     }
 
-    @ApiOperation(value="更新单条条目")
+    @ApiOperation(value = "更新单条条目")
     @PreAuthorize("hasRole('USER')")
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-    public JsonResult<Entry> updateEntry(@PathVariable  @ApiParam(value = "条目id", required = true)  String id,
-                                         @ApiParam(value = "条目对象", required = true)  @RequestBody Entry entry) {
+    public JsonResult<Entry> updateEntry(@PathVariable @ApiParam(value = "条目id", required = true) String id,
+                                         @ApiParam(value = "条目对象", required = true) @RequestBody Entry entry) {
         entry.setId(id);
         return entryService.save(entry);
     }
 
-    @ApiOperation(value="更新条目喜欢数量")
+    @ApiOperation(value = "更新条目喜欢数量")
     @ApiImplicitParam(name = "id", value = "条目ID", required = true,
             dataType = "String", paramType = "path")
     @PreAuthorize("hasRole('USER')")

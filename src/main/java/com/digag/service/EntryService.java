@@ -20,7 +20,6 @@ public interface EntryService {
 
     JsonResult<Entry> findOne (String id);
 
-    JsonResult<Page<Entry>> findAll (Integer page, Integer size);
-
+    JsonResult<Page<Entry>> findAll (Integer page, Integer size, HttpServletRequest request);
 
 }
