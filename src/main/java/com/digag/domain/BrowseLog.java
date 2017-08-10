@@ -11,7 +11,7 @@ import javax.persistence.Id;
  * https://github.com/Yuicon
  */
 @Entity
-public class BrowseLog {
+public class BrowseLog{
 
     @Id
     @GeneratedValue(generator = "paymentableGenerator")
