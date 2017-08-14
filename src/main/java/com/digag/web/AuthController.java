@@ -40,7 +40,7 @@ public class AuthController {
     public JsonResult<String> createAuthenticationToken(
             @RequestBody JwtAuthenticationRequest authenticationRequest) throws AuthenticationException {
 
-        return authService.login(authenticationRequest.getUsername(), authenticationRequest.getPassword());
+        return authService.login(authenticationRequest.getAccount(), authenticationRequest.getPassword());
     }
 
     @ApiOperation(value = "刷新Token")

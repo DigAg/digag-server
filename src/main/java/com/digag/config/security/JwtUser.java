@@ -14,14 +14,14 @@ import java.util.Date;
 public class JwtUser implements UserDetails {
 
     private final String id;
-    private final String username;
+    private final String account;
     private final String password;
     private final Collection<? extends GrantedAuthority> authorities;
     private final Date lastPasswordResetDate;
 
-    JwtUser(String id, String username, String password, Collection<? extends GrantedAuthority> authorities, Date lastPasswordResetDate) {
+    JwtUser(String id, String account, String password, Collection<? extends GrantedAuthority> authorities, Date lastPasswordResetDate) {
         this.id = id;
-        this.username = username;
+        this.account = account;
         this.password = password;
         this.authorities = authorities;
         this.lastPasswordResetDate = lastPasswordResetDate;
@@ -46,7 +46,7 @@ public class JwtUser implements UserDetails {
 
     @Override
     public String getUsername() {
-        return username;
+        return account;
     }
     // 账户是否未过期
     @JsonIgnore
