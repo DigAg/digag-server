@@ -122,7 +122,7 @@ public class EntryServiceImpl implements EntryService {
                 browseLog1.setCount(browseLog1.getCount() + 1);
                 browseLogRepository.save(browseLog1);
             } else {
-                browseLogRepository.save(new BrowseLog(request.getRemoteAddr(), user.getId(), 1));
+                browseLogRepository.save(new BrowseLog(request.getRemoteAddr(), user.getId(), 1, new Date(System.currentTimeMillis())));
             }
         } else {
             browseLog = Optional.
@@ -132,7 +132,7 @@ public class EntryServiceImpl implements EntryService {
                 browseLog1.setCount(browseLog1.getCount() + 1);
                 browseLogRepository.save(browseLog1);
             } else {
-                browseLogRepository.save(new BrowseLog(request.getRemoteAddr(), 1));
+                browseLogRepository.save(new BrowseLog(request.getRemoteAddr(), 1, new Date(System.currentTimeMillis())));
             }
         }
 

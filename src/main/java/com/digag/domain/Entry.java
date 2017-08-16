@@ -60,6 +60,18 @@ public class Entry implements Serializable {
     @JoinColumn(name = "article_id")
     private Article article;
 
+    @ManyToOne(fetch=FetchType.EAGER )
+    @JoinColumn(name="user_id")
+    private User user;
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
     public Entry() {
     }
 

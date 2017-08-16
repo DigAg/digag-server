@@ -5,6 +5,7 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import java.util.Date;
 
 /**
  * Created by Yuicon on 2017/8/9.
@@ -24,18 +25,30 @@ public class BrowseLog{
 
     private int count;
 
+    private Date lastTime;
+
     public BrowseLog() {
     }
 
-    public BrowseLog(String ip, int count) {
+    public BrowseLog(String ip, int count, Date lastTime) {
         this.ip = ip;
         this.count = count;
+        this.lastTime = lastTime;
     }
 
-    public BrowseLog(String ip, String uid, int count) {
+    public BrowseLog(String ip, String uid, int count, Date lastTime) {
         this.ip = ip;
         this.uid = uid;
         this.count = count;
+        this.lastTime = lastTime;
+    }
+
+    public Date getLastTime() {
+        return lastTime;
+    }
+
+    public void setLastTime(Date lastTime) {
+        this.lastTime = lastTime;
     }
 
     public String getId() {
