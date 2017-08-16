@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -11,7 +12,9 @@ import java.util.List;
  * https://segmentfault.com/u/yuicon
  */
 @Entity
-public class Role {
+public class Role implements Serializable {
+
+    private static final long serialVersionUID = 5L;
 
     @Id
     @GeneratedValue(generator = "paymentableGenerator")

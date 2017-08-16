@@ -132,4 +132,8 @@ public class JwtTokenUtil implements Serializable {
                         && !isTokenExpired(token)
                         && !isCreatedBeforeLastPasswordReset(created, user.getLastPasswordResetDate()));
     }
+
+    Boolean validateToken(String token) {
+        return (!isTokenExpired(token));
+    }
 }

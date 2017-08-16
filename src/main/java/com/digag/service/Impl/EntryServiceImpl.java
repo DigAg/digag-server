@@ -120,6 +120,7 @@ public class EntryServiceImpl implements EntryService {
             if (browseLog.isPresent()) {
                 BrowseLog browseLog1 = browseLog.get();
                 browseLog1.setCount(browseLog1.getCount() + 1);
+                browseLog1.setLastTime(new Date(System.currentTimeMillis()));
                 browseLogRepository.save(browseLog1);
             } else {
                 browseLogRepository.save(new BrowseLog(request.getRemoteAddr(), user.getId(), 1, new Date(System.currentTimeMillis())));
@@ -130,6 +131,7 @@ public class EntryServiceImpl implements EntryService {
             if (browseLog.isPresent()) {
                 BrowseLog browseLog1 = browseLog.get();
                 browseLog1.setCount(browseLog1.getCount() + 1);
+                browseLog1.setLastTime(new Date(System.currentTimeMillis()));
                 browseLogRepository.save(browseLog1);
             } else {
                 browseLogRepository.save(new BrowseLog(request.getRemoteAddr(), 1, new Date(System.currentTimeMillis())));

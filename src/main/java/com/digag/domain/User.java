@@ -7,9 +7,7 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by Yuicon on 2017/5/14.
@@ -41,17 +39,6 @@ public class User implements Serializable {
     @JoinTable(joinColumns = @JoinColumn(name = "ROLE_ID"),
             inverseJoinColumns = @JoinColumn(name = "USER_ID"))
     private List<Role> roles;
-
-    @OneToMany(mappedBy="user",cascade= CascadeType.ALL)
-    private List<Entry> entries;
-
-    public List<Entry> getEntries() {
-        return entries;
-    }
-
-    public void setEntries(List<Entry> entries) {
-        this.entries = entries;
-    }
 
     public User() {
     }

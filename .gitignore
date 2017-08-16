@@ -27,3 +27,4 @@ nbdist/
 mvnw
 mvnw.cmd
 /src/main/docker/digag-server-0.0.1-SNAPSHOT.jar
+/spring.log
