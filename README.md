@@ -5,6 +5,7 @@
  ### Usage
 
 To run it:
+```
      # 在本地生成镜像,需安装docker
      mvn clean package docker:build
      # 将docker-compose.yml中的 web 容器镜像改为上面生成的镜像
@@ -13,6 +14,7 @@ To run it:
      docker-compose exec mysql bash
      mysql -uroot -proot
      create database `db_digag` default character set utf8 collate utf8_general_ci;
+```
 
      
  ### online http://139.224.135.86:8080/swagger-ui.html
