@@ -22,4 +22,6 @@ public interface EntryService {
 
     JsonResult<Page<Entry>> findAll (Integer page, Integer size, HttpServletRequest request);
 
+    JsonResult<Page<Entry>> findByUserName (Integer page, Integer size, String username);
+
 }

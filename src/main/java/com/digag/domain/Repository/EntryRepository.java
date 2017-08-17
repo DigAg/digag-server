@@ -21,6 +21,9 @@ public interface EntryRepository extends JpaRepository<Entry,String> {
     @Cacheable()
     Page<Entry> findAll(Pageable var1);
 
+    @Cacheable()
+    Page<Entry> findByAuthor(String author, Pageable var1);
+
     @Transactional
     @CacheEvict(allEntries=true)
     <S extends Entry> S  save(S s);

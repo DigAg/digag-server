@@ -2,9 +2,11 @@ package com.digag.web;
 
 import com.digag.domain.User;
 import com.digag.domain.Repository.UserRepository;
+import com.digag.util.JsonResult;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +23,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/users")
-@ApiIgnore
+@SuppressWarnings("all")
 public class UserController {
 
     @Autowired
@@ -67,9 +69,9 @@ public class UserController {
     }
 
     @ApiOperation(value="获取用户", notes="通过用户名")
-    @PostAuthorize("returnObject.username == principal.username or hasRole('ROLE_ADMIN')")
+    @PostAuthorize("hasRole('ROLE_USER')")
     @RequestMapping(value = "/",method = RequestMethod.GET)
-    public User getUserByUsername(@RequestParam(value="username") String username) {
-        return repository.findByUsername(username);
+    public JsonResult<User> getUserByUsername(@RequestParam(value="username") String username) {
+        return JsonResult.<User>builder().data(repository.findByUsername(username)).build();
     }
 }

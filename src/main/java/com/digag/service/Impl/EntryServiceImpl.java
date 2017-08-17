@@ -143,5 +143,12 @@ public class EntryServiceImpl implements EntryService {
         return JsonResult.<Page<Entry>>builder().data(entryRepository.findAll(pageable)).build();
     }
 
+    @Override
+    public JsonResult<Page<Entry>> findByUserName(Integer page, Integer size, String username) {
+        Sort sort = new Sort(Sort.Direction.DESC, "createdAt");
+        Pageable pageable = new PageRequest(page, size, sort);
+        return JsonResult.<Page<Entry>>builder().data(entryRepository.findByAuthor(username, pageable)).build();
+    }
+
 
 }

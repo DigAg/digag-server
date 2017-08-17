@@ -42,6 +42,15 @@ public class EntryController {
         return entryService.findAll(page, size, request);
     }
 
+    @ApiOperation(value = "获取某用户的条目列表")
+    @RequestMapping(value = "/user",method = RequestMethod.GET)
+    public JsonResult<Page<Entry>> getEntriesByUser(@RequestParam(value = "page", defaultValue = "0") Integer page,
+                                              @RequestParam(value = "size", defaultValue = "15") Integer size,
+                                                    @ApiParam(value = "用户昵称", required = true)
+                                                        @RequestParam(value = "username") String username) {
+        return entryService.findByUserName(page, size, username);
+    }
+
     @ApiOperation(value = "创建条目")
     @ApiImplicitParam(name = "entry", value = "条目", required = true,
             dataType = "Entry")
