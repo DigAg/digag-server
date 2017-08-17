@@ -40,6 +40,9 @@ public class User implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "USER_ID"))
     private List<Role> roles;
 
+    @Transient
+    private List<Entry> entries;
+
     public User() {
     }
 
@@ -50,6 +53,14 @@ public class User implements Serializable {
         this.account = account;
         this.lastPasswordResetDate = lastPasswordResetDate;
         this.roles = roles;
+    }
+
+    public List<Entry> getEntries() {
+        return entries;
+    }
+
+    public void setEntries(List<Entry> entries) {
+        this.entries = entries;
     }
 
     public String getId() {

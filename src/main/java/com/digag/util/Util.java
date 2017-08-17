@@ -15,8 +15,8 @@ public class Util {
     /**
      * 验证邮箱
      *
-     * @param email
-     * @return
+     * @param email 邮箱
+     * @return 正确返回 true
      */
     public static boolean checkEmail(String email) {
         boolean flag = false;
@@ -29,5 +29,9 @@ public class Util {
             flag = false;
         }
         return flag;
+    }
+
+    public static void main(String[] args) {
+        System.out.print(checkEmail("910@q.com"));
     }
 }

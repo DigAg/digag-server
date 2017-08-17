@@ -63,7 +63,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public JsonResult<User> register(User userToAdd) {
 
-        if (userToAdd.getAccount() == null || Util.checkEmail(userToAdd.getAccount())) {
+        if (userToAdd.getAccount() == null || !Util.checkEmail(userToAdd.getAccount())) {
             return JsonResult.<User>builder().error("注册帐号错误!").build();
         }
 
