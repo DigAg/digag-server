@@ -1,5 +1,7 @@
 package com.digag.util;
 
+import com.digag.config.security.JwtTokenUtil;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -19,7 +21,7 @@ public class Util {
      * @return 正确返回 true
      */
     public static boolean checkEmail(String email) {
-        boolean flag = false;
+        boolean flag;
         try {
             String check = "^([a-z0-9A-Z]+[-|_|\\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}$";
             Pattern regex = Pattern.compile(check);
@@ -32,6 +34,6 @@ public class Util {
     }
 
     public static void main(String[] args) {
-        System.out.print(checkEmail("910@q.com"));
+        System.out.println(checkEmail("910@q.com"));
     }
 }

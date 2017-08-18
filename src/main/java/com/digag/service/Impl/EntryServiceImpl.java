@@ -109,21 +109,36 @@ public class EntryServiceImpl implements EntryService {
 
     @Override
     public JsonResult<Page<Entry>> findAll(Integer page, Integer size, HttpServletRequest request) {
+        addBrowseLog(request);
+        Sort sort = new Sort(Sort.Direction.DESC, "createdAt");
+        Pageable pageable = new PageRequest(page, size, sort);
+        return JsonResult.<Page<Entry>>builder().data(entryRepository.findAll(pageable)).build();
+    }
 
+    @Override
+    public JsonResult<Page<Entry>> findByUserName(Integer page, Integer size, String username) {
+        Sort sort = new Sort(Sort.Direction.DESC, "createdAt");
+        Pageable pageable = new PageRequest(page, size, sort);
+        return JsonResult.<Page<Entry>>builder().data(entryRepository.findByAuthor(username, pageable)).build();
+    }
+
+    private void addBrowseLog(HttpServletRequest request) {
         String authHeader = request.getHeader(this.tokenHeader);
         Optional<BrowseLog> browseLog;
         if (authHeader != null && authHeader.startsWith(tokenHead)) {
             final String authToken = authHeader.substring(tokenHead.length()); // The part after "Bearer "
             User user = userRepository.findByAccount(jwtTokenUtil.getUsernameFromToken(authToken));
-            browseLog = Optional.
-                    ofNullable(browseLogRepository.findByUid(user.getId()));
-            if (browseLog.isPresent()) {
-                BrowseLog browseLog1 = browseLog.get();
-                browseLog1.setCount(browseLog1.getCount() + 1);
-                browseLog1.setLastTime(new Date(System.currentTimeMillis()));
-                browseLogRepository.save(browseLog1);
-            } else {
-                browseLogRepository.save(new BrowseLog(request.getRemoteAddr(), user.getId(), 1, new Date(System.currentTimeMillis())));
+            if (user != null) {
+                browseLog = Optional.
+                        ofNullable(browseLogRepository.findByUid(user.getId()));
+                if (browseLog.isPresent()) {
+                    BrowseLog browseLog1 = browseLog.get();
+                    browseLog1.setCount(browseLog1.getCount() + 1);
+                    browseLog1.setLastTime(new Date(System.currentTimeMillis()));
+                    browseLogRepository.save(browseLog1);
+                } else {
+                    browseLogRepository.save(new BrowseLog(request.getRemoteAddr(), user.getId(), 1, new Date(System.currentTimeMillis())));
+                }
             }
         } else {
             browseLog = Optional.
@@ -137,17 +152,6 @@ public class EntryServiceImpl implements EntryService {
                 browseLogRepository.save(new BrowseLog(request.getRemoteAddr(), 1, new Date(System.currentTimeMillis())));
             }
         }
-
-        Sort sort = new Sort(Sort.Direction.DESC, "createdAt");
-        Pageable pageable = new PageRequest(page, size, sort);
-        return JsonResult.<Page<Entry>>builder().data(entryRepository.findAll(pageable)).build();
-    }
-
-    @Override
-    public JsonResult<Page<Entry>> findByUserName(Integer page, Integer size, String username) {
-        Sort sort = new Sort(Sort.Direction.DESC, "createdAt");
-        Pageable pageable = new PageRequest(page, size, sort);
-        return JsonResult.<Page<Entry>>builder().data(entryRepository.findByAuthor(username, pageable)).build();
     }
 
 
