@@ -2,6 +2,7 @@ package com.digag.web;
 
 import com.digag.domain.User;
 import com.digag.domain.Repository.UserRepository;
+import com.digag.service.UserService;
 import com.digag.util.JsonResult;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
@@ -12,6 +13,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -28,6 +30,9 @@ public class UserController {
 
     @Autowired
     private UserRepository repository;
+
+    @Autowired
+    private UserService userService;
 
     @ApiOperation(value="获取用户列表")
     @PreAuthorize("hasRole('USER')")
@@ -73,5 +78,12 @@ public class UserController {
     @RequestMapping(value = "/",method = RequestMethod.GET)
     public JsonResult<User> getUserByUsername(@RequestParam(value="username") String username) {
         return JsonResult.<User>builder().data(repository.findByUsername(username)).build();
+    }
+
+    @ApiOperation(value="获取当前用户")
+    @PostAuthorize("hasRole('ROLE_USER')")
+    @RequestMapping(value = "/current",method = RequestMethod.GET)
+    public JsonResult<User> getCurrentUser(HttpServletRequest request) {
+        return userService.getCurrentUser(request);
     }
 }
