@@ -1,4 +1,6 @@
-![digag-server](https://img.shields.io/github/downloads/DigAg/digag-server/latest/total.svg) ![License MIT](https://img.shields.io/badge/license-MIT-blue.svg) [![Build Status](https://api.travis-ci.org/DigAg/digag-server.svg?branch=master)](https://travis-ci.org/DigAg/digag-server) [![](https://img.shields.io/docker/stars/digag/digag-server.svg)](https://hub.docker.com/r/digag/digag-server 'DockerHub') [![](https://img.shields.io/docker/pulls/digag/digag-server.svg)](https://hub.docker.com/r/digag/digag-server 'DockerHub') [![](https://badge.juejin.im/entry/5986d4d26fb9a03c350a5181/likes.svg?style=flat-square)](https://juejin.im/entry/5986d4d26fb9a03c350a5181/detail)
+[![](https://img.shields.io/docker/pulls/digag/digag-server.svg)](https://hub.docker.com/r/digag/digag-server 'DockerHub') 
+[![](https://badge.juejin.im/entry/5986d4d26fb9a03c350a5181/likes.svg?style=flat-square)](https://juejin.im/entry/5986d4d26fb9a03c350a5181/detail)
+![License MIT](https://img.shields.io/badge/license-MIT-blue.svg) 
 
 
  
