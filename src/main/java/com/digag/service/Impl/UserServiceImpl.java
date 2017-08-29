@@ -1,7 +1,6 @@
 package com.digag.service.Impl;
 
 import com.digag.config.security.JwtTokenUtil;
-import com.digag.domain.Entry;
 import com.digag.domain.Repository.UserRepository;
 import com.digag.domain.User;
 import com.digag.service.UserService;
@@ -11,10 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Date;
-
 import static com.digag.util.Util.md5Hex;
-
 /**
  * Created by Yuicon on 2017/8/20.
  * https://github.com/Yuicon
