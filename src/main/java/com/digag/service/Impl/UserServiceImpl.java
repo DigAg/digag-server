@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 
+import static com.digag.util.Util.md5Hex;
+
 /**
  * Created by Yuicon on 2017/8/20.
  * https://github.com/Yuicon
@@ -47,6 +49,7 @@ public class UserServiceImpl implements UserService{
             if (user == null) {
                 return JsonResult.<User>builder().error("token错误").build();
             }
+            user.setAccount(md5Hex(user.getAccount()));
             return JsonResult.<User>builder().data(user).build();
         }
         return JsonResult.<User>builder().error("token错误").build();
